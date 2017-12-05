@@ -1,0 +1,103 @@
+package IO_PRO;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.StringTokenizer;
+
+interface result {
+	public void readData(String fileName, String major[], String number[], String name[],
+			double kor[], double math[], double java[], double cplus[]); //파일 읽어오기
+	public void sum(double total[], double kor[], double math[], double java[], double cplus[]); //합계
+	public void avg(double total[], double avg[]); //평균
+	public void rank(double avg[], int rank[]); //등수
+	public void printData(Handler f); //출력
+}
+class Score implements result{
+	@Override
+	public void readData(String fileName, String major[], String number[], String name[],
+			double kor[], double math[], double java[], double cplus[]) {
+		try {
+			FileReader fr=new FileReader(fileName);
+			BufferedReader br=new BufferedReader(fr);
+			String tmpStr="", csvStr="";
+			do {
+				tmpStr=br.readLine();
+				if(tmpStr!=null) {
+					csvStr+=tmpStr+"\t";
+				}
+			} while(tmpStr!=null);
+			StringTokenizer parse=new StringTokenizer(csvStr,"\t");
+			int length=parse.countTokens()/7;
+			for(int i=0; i<length; i++) {
+				major[i]=parse.nextToken();
+				number[i]=parse.nextToken();
+				name[i]=parse.nextToken();
+				kor[i]=Double.valueOf(parse.nextToken()).doubleValue();
+				math[i]=Double.valueOf(parse.nextToken()).doubleValue();
+				java[i]=Double.valueOf(parse.nextToken()).doubleValue();
+				cplus[i]=Double.valueOf(parse.nextToken()).doubleValue();
+			}
+		} catch(Exception e) {}
+	}
+
+	@Override
+	public void sum(double total[], double kor[], double math[], double java[], double cplus[]) {
+		for(int i=0; i<=total.length; i++) 
+			total[i]=kor[i]+math[i]+java[i]+cplus[i];
+	}
+
+	@Override
+	public void avg(double total[], double avg[]) {
+		for(int i=0; i<=total.length; i++) 
+			avg[i]=total[i]/4.0;
+	}
+
+	@Override
+	public void rank(double avg[], int rank[]) {
+		for(int i=0; i<=avg.length; i++) rank[i]=1;
+		for(int i=0; i<=avg.length; i++) {
+			for(int j=0; j<=avg.length; j++) {
+				if (avg[i] < avg[j]) rank[i]++;
+			}
+		}
+	}
+
+	@Override
+	public void printData(Handler f) {
+		System.out.printf("%8s %8s %8s %8s %8s %8s %8s %8s %8s %8s",
+				"학과", "번호", "이름", "국어", "수학", "자바", "C++", "합계", "평균", "등수");
+		for(int i=0; i<f.kor.length; i++) {
+			System.out.printf("%8s %8s %8s %8s %8s %8s %8s %8s %8s %8s",
+				f.major[i], f.number[i], f.name[i], f.kor[i], f.math[i], f.java[i], 
+				f.cplus[i], f.total[i], f.avg[i], f.rank[i]);
+			}
+	}
+}
+
+class Handler {
+	String fileName;
+	int length=parse.countTokens()/7;
+	String major[], number[], name[];
+	double kor[], math[], java[], cplus[], total[], avg[];
+	int rank[];
+	
+	public Handler(String fileName) {
+		super();
+		this.fileName = fileName;
+	}
+	
+	public void ctrl(Score s) {
+		s.readData(fileName, major, number, name, kor, math, java, cplus);
+		s.sum(total, kor, math, java, cplus);
+		s.avg(total, avg);
+		s.rank(avg,rank);
+	}
+}
+
+public class GradeMain {
+	public static void main(String[] args) {
+		Score s=new Score();
+		Handler f=new Handler("student.txt");
+		f.ctrl(s);
+	}
+}
