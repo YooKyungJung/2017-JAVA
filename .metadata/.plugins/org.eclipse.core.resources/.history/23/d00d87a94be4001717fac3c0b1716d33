@@ -107,7 +107,6 @@ public class V18 extends Frame implements ActionListener{
 		bt_save.addActionListener(this);
 		bt_delete.addActionListener(this);
 		bt_search.addActionListener(this);
-		bt_init.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
@@ -205,18 +204,17 @@ public class V18 extends Frame implements ActionListener{
 						+", group4 = " + cb_g4.getState() + " where name = '" + str_name +"';");
 				ta.setText("수정완료!");
 				System.out.println(num +"개의 수정 성공");
-			} catch(SQLException ee){ System.err.println("명령어 전송 실패,,"); }
+			}catch(SQLException ee){
+				System.err.println("명령어 전송 실패,,");
+			}
 		}else if(ae.getSource() == bt_delete){
 			try{
 				int num = stmt.executeUpdate("delete from t1 where name = '" + str_name + "'");
 				ta.setText("삭제완료!");
 				System.out.println(num +"개의 삭제 성공");
-			}catch(SQLException ee){ System.err.println("명령어 전송 실패"); }
-		}else if(ae.getSource() == bt_init){
-				tf_name.setText(""); tf_phone.setText(""); ta.setText("");
-				cb_g1.setState(false); cb_g2.setState(false); 
-				cb_g3.setState(false); cb_g4.setState(false);
-				System.out.println("초기화");
+			}catch(SQLException ee){
+				System.err.println("명령어 전송 실패");
+			}
 		}
 		
 		try{

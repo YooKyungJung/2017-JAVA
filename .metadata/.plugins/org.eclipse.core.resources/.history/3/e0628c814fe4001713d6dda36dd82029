@@ -213,7 +213,7 @@ public class V18 extends Frame implements ActionListener{
 				System.out.println(num +"개의 삭제 성공");
 			}catch(SQLException ee){ System.err.println("명령어 전송 실패"); }
 		}else if(ae.getSource() == bt_init){
-				tf_name.setText(""); tf_phone.setText(""); ta.setText("");
+				tf_name.setText(""); ta.setText(""); tf_phone.setText("");
 				cb_g1.setState(false); cb_g2.setState(false); 
 				cb_g3.setState(false); cb_g4.setState(false);
 				System.out.println("초기화");
