@@ -16,7 +16,7 @@ public class UDPClientExam2 {
 			BufferedReader in =new BufferedReader(new InputStreamReader(System.in));
 			String msg=in.readLine();
 			
-			DatagramPacket dp=new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName("10.96.122.197"), 10);
+			DatagramPacket dp=new DatagramPacket(msg.getBytes(), msg.getBytes().length, InetAddress.getByName("10.96.122.169"), 2000);
 			
 			DatagramSocket ds=new DatagramSocket();
 			ds.send(dp);

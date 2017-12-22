@@ -7,7 +7,7 @@ import java.net.DatagramSocket;
 public class UDPServerExam2 {
 
 	public static void main(String[] args) throws IOException {
-		DatagramSocket ds=new DatagramSocket(10);
+		DatagramSocket ds=new DatagramSocket(2000);
 		byte[] data=new byte[65508];
 		
 		DatagramPacket dp=new DatagramPacket(data, data.length);

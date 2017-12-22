@@ -1,24 +1,13 @@
 package database;
-
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Choice;
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.TextArea;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -30,210 +19,230 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class V18 extends Frame implements ActionListener{
+public class V18 extends JFrame implements ActionListener, ItemListener{
+	String name="",m="",d="",c="sol",p="";
+	boolean g1=false,g2=false,g3=false,g4=false;
 	JPanel p1=new JPanel();
-	JPanel p2=new JPanel();
+	JPanel p2=new JPanel(new FlowLayout());
 	JPanel p3=new JPanel();
-	JPanel p4=new JPanel();
-	JPanel p5=new JPanel();
-	JPanel p6=new JPanel();
 	
-	
-	JLabel lb_name=new JLabel("이 름");
-	TextField tf_name =new TextField(10);
+	JLabel lb_name=new JLabel("이 름 ");
+	JTextField tf_name=new JTextField(10);
 	JButton bt_search=new JButton("검색");
-	JLabel lb_birth=new JLabel("생 일");
-	Choice ch_month=new Choice();
-	JLabel lb_month=new JLabel("월");
-	Choice ch_day=new Choice();
-	JLabel lb_day=new JLabel("일");
-	CheckboxGroup g=new CheckboxGroup();
-	Checkbox cb1=new Checkbox("양력", g,true);
-	Checkbox cb2=new Checkbox("음력", g,false);
-	JLabel lb_phone=new JLabel("전화번호:");
-	TextField tf_phone=new TextField(30);
+	JLabel lb_birthday=new JLabel("생 일: ");
 	
-	JLabel lb_group = new JLabel("그 룹 : "); //그룹 라벨
-	Checkbox cb_g1= new Checkbox("학 교", true);
-	Checkbox cb_g2 = new Checkbox("학 원");
-	Checkbox cb_g3 = new Checkbox("동 네");
-	Checkbox cb_g4 = new Checkbox("기 타");
+	Choice ch_month=new Choice();
+	Choice ch_day=new Choice();
+	JLabel lb_month=new JLabel("월 ");
+	JLabel lb_day=new JLabel("일 ");
+	
+	CheckboxGroup b=new CheckboxGroup();
+	Checkbox ra_solar=new Checkbox("양력",b,true);
+	Checkbox ra_lunar=new Checkbox("음력",b,false);
+	
+	JLabel lb_phonenum=new JLabel("전화번호: ");
+	JTextField tf_phonenum=new JTextField(20);
+	JLabel lb_group=new JLabel("그 룹: ");
+	JCheckBox ck_school=new JCheckBox("학 교");
+	JCheckBox ck_academy=new JCheckBox("학 원");
+	JCheckBox ck_town=new JCheckBox("동 네");
+	JCheckBox ck_etc=new JCheckBox("기 타");
+	
+	JTextArea ta_info=new JTextArea(3,25);
+	JScrollPane scrollPane = new JScrollPane(ta_info,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	
 	JButton bt_save=new JButton("저장");
-	JButton bt_delete=new JButton("삭제");
-	JButton bt_modify=new JButton("수정");
-	JButton bt_init=new JButton("초기화");
-	JTextArea ta=new JTextArea(2,40);
+	JButton bt_del=new JButton("삭제");
+	JButton bt_change=new JButton("수정");
+	JButton bt_clean=new JButton("초기화");
+	
 	
 	public V18(){
-		super("친구정보");
+		for(int a=1;a<=12;a++){
+			ch_month.addItem(Integer.toString(a));
+		}
+		for(int a=1;a<=31;a++){
+			ch_day.addItem(Integer.toString(a));
+		}
+		ta_info.setEditable(false);
 		
 		p1.add(lb_name);
 		p1.add(tf_name);
 		p1.add(bt_search);
-		for(int i=1; i<=12; i++) {
-			ch_month.addItem(Integer.toString(i));
-		}
-		for(int i=1; i<=31; i++) {
-			ch_day.addItem(Integer.toString(i));
-		}
 		
-		p2.add(lb_birth);
+		p2.add(lb_birthday);
 		p2.add(ch_month);
+		p2.add(lb_month);
 		p2.add(ch_day);
 		p2.add(lb_day);
-		p2.add(cb1);
-		p2.add(cb2);
-		p3.add(lb_phone);
-		p3.add(tf_phone);
-		p4.add(lb_group);
-		p4.add(cb_g1); p4.add(cb_g2); p4.add(cb_g3); p4.add(cb_g4);
-		p5.add(bt_save); p5.add(bt_delete); p5.add(bt_modify); p5.add(bt_init);
-		p6.setLayout(new GridLayout(4,1));
-		p6.setBackground(Color.yellow);
+		p2.add(ra_solar);
+		p2.add(ra_lunar);
+		p2.add(lb_phonenum);
+		p2.add(tf_phonenum);
+		p2.add(lb_group);
+		p2.add(ck_school);
+		p2.add(ck_academy);
+		p2.add(ck_town);
+		p2.add(ck_etc);
+		p2.add(scrollPane);
 		
-		p6.add(p2); p6.add(p3); p6.add(p4); p6.add(ta);
+		p3.add(bt_save);
+		p3.add(bt_del);
+		p3.add(bt_change);
+		p3.add(bt_clean);
+		
 		add(p1,BorderLayout.NORTH);
-		add(p6,BorderLayout.CENTER);
-		add(p5,BorderLayout.SOUTH);
+		add(p2,BorderLayout.CENTER);
+		add(p3,BorderLayout.SOUTH);
 		
-		setSize(350,250);
+		setSize(330,270);
 		setVisible(true);
 		
-		addWindowListener(new MyClass());
-		bt_save.addActionListener(this);
-		bt_delete.addActionListener(this);
 		bt_search.addActionListener(this);
-		bt_init.addActionListener(this);
+		ra_solar.addItemListener(this);
+		ra_lunar.addItemListener(this);
+		bt_save.addActionListener(this);
+		bt_del.addActionListener(this);
+		bt_change.addActionListener(this);
+		bt_clean.addActionListener(this);
 	}
 	
-	public void actionPerformed(ActionEvent ae) {
-		
-		String str_name = tf_name.getText();
-		String str_month  =ch_month.getSelectedItem();
-		String str_day = ch_day.getSelectedItem();
-		String str_cb = null;
-		
-		
-		if(cb1.getState())
-			str_cb = cb1.getLabel();
-		else 
-			str_cb = cb2.getLabel();
-		String str_phone = tf_phone.getText();
-		String str_group ="";
-		
-		if(cb_g1.getState())
-			str_group = str_group + cb_g1.getLabel();
-		if(cb_g2.getState())
-			str_group = str_group + cb_g2.getLabel();
-		if(cb_g3.getState())
-			str_group = str_group + cb_g3.getLabel();
-		if(cb_g4.getState())
-			str_group = str_group + cb_g4.getLabel();
-			
-		try{
-			Class.forName("org.gjt.mm.mysql.Driver");
-		}catch(ClassNotFoundException ee){
-			System.out.println("DB 연결 드라이버 없음");
-		}
-		
-		Connection conn = null;
-		String url = "jdbc:mysql://localhost:3306/test?useSSL=false";
-		String id = "root";
-		String pw = "0903";
-		try{
-			conn = DriverManager.getConnection(url,id,pw);
-		}catch(SQLException ee){
-			System.err.println("DB 서버 연결 실패");
-		}
-		Statement stmt = null;
-		try{
-			stmt = conn.createStatement();
-		}catch(SQLException ee){
-			System.out.println("작업 처리 객체 생성 실패");
-		}
-		
-		ResultSet rs = null;
-		
-		
-		if(ae.getSource() == bt_search){
-			cb1.setState(false);cb2.setState(false);
-			cb_g1.setState(false);cb_g2.setState(false);
-			cb_g3.setState(false);cb_g4.setState(false);
-			
-			try{
-				rs = stmt.executeQuery("select * from t1 where name = '"+str_name+"'");
-				if(rs.next()){
-					ch_month.select(rs.getString("month"));
-					ch_day.select(rs.getString("day"));
-					if(rs.getString("birth_option").equals("양력")){
-						cb1.setState(true);
-					}else{
-						cb2.setState(true);
-					}
-					tf_phone.setText(rs.getString("phone"));
-					if(rs.getString("group1").equals("1")){
-						cb_g1.setState(true);
-					}if(rs.getString("group2").equals("1")){
-						cb_g2.setState(true);
-					}if(rs.getString("group3").equals("1")){
-						cb_g3.setState(true);
-					}if(rs.getString("group4").equals("1")){
-						cb_g4.setState(true);
-					}
-				}
-			}catch(SQLException ee){
-				System.err.println("검색 명령어 전송 실패" + ee.toString());
-			}
-		}else if(ae.getSource() ==bt_save){
-			try{
-				int num = stmt.executeUpdate("insert into t1 values('"+str_name + "'" + "," 
-			+ str_month +"," + str_day + ",'" + str_cb + "','" + str_phone + "'," + cb_g1.getState() +"," + cb_g2.getState()
-			+ "," + cb_g3.getState() + "," + cb_g4.getState() +")");
-				ta.setText("삽입완료!");
-				System.out.println(num + "개 삽입 성공 ");
-			}catch(SQLException ee){
-				System.err.println("명령어 전송 실패");
-			}
-		}else if(ae.getSource() == bt_modify){
-			try{
-				int num = stmt.executeUpdate("update t1 set month ="+str_month + ", day= " + str_day +", "
-						+ "birth_option = ' " + str_cb+"'"+", phone = '" + str_phone+"'"  +",group1 = " + cb_g1.getState() + ", group2 = " + cb_g2.getState() +", group3 = " + cb_g3.getState()
-						+", group4 = " + cb_g4.getState() + " where name = '" + str_name +"';");
-				ta.setText("수정완료!");
-				System.out.println(num +"개의 수정 성공");
-			} catch(SQLException ee){ System.err.println("명령어 전송 실패,,"); }
-		}else if(ae.getSource() == bt_delete){
-			try{
-				int num = stmt.executeUpdate("delete from t1 where name = '" + str_name + "'");
-				ta.setText("삭제완료!");
-				System.out.println(num +"개의 삭제 성공");
-			}catch(SQLException ee){ System.err.println("명령어 전송 실패"); }
-		}else if(ae.getSource() == bt_init){
-				tf_name.setText(""); tf_phone.setText(""); ta.setText("");
-				cb_g1.setState(false); cb_g2.setState(false); 
-				cb_g3.setState(false); cb_g4.setState(false);
-				System.out.println("초기화");
-		}
-		
-		try{
-			stmt.close();
-			conn.close();
-		}catch(SQLException ee){
-			System.out.println("접속 종료 실패,,");
-		}
-	}
 	public static void main(String[] args) {
+		// TODO Auto-generated method stub
 		new V18();
 	}
 
-}
-
-class MyClass extends WindowAdapter{
-	public void WindowClosing(WindowEvent e){
-		System.exit(0);
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getStateChange()==ItemEvent.SELECTED){
+			if(e.getItem().equals("양력")){
+				c="sol";
+			}
+			else if(e.getItem().equals("음력")){
+				c="lun";
+			}
+		}
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {		
+		// TODO Auto-generated method stub
+		name=tf_name.getText();
+		m=ch_month.getSelectedItem();
+		d=ch_day.getSelectedItem();
+		p=tf_phonenum.getText();
+		g1=false;
+		g2=false;
+		g3=false;
+		g4=false;
+		
+		if(ck_school.isSelected())
+			g1=true;
+		if(ck_academy.isSelected())
+			g2=true;
+		if(ck_town.isSelected())
+			g3=true;
+		if(ck_etc.isSelected())
+			g4=true;
+		
+		try{
+			Class.forName("org.gjt.mm.mysql.Driver");
+		}catch(ClassNotFoundException ee){
+			System.err.println("DB 연결 드라이버가 없음");
+		}
+		
+		Connection conn=null;
+		String url="jdbc:mysql://127.0.0.1:3306/test?useSSL=false";
+		String id="root";
+		String pw="0903";
+		try{
+			conn=DriverManager.getConnection(url,id,pw);
+		}catch(SQLException ee){
+			System.err.println("DB 서버 연결 실패");
+		}
+		
+		Statement stmt=null;
+		try{
+			stmt=conn.createStatement();
+		}catch(SQLException ee){
+			System.err.println("작업 처리 객체 생성 실패");
+		}
+		
+		ResultSet rs=null;
+		
+		if(e.getSource().equals(bt_search)){
+			ra_lunar.setState(false);
+			ra_solar.setState(false);
+			ck_school.setSelected(false);
+			ck_academy.setSelected(false);
+			ck_town.setSelected(false);
+			ck_etc.setSelected(false);
+			
+			try{
+				rs=stmt.executeQuery("select *from t1 where name='"+name+"'");
+				if(rs.next()){
+					ch_month.select(rs.getString("month"));
+					ch_day.select(rs.getString("day"));
+					if(rs.getString("birth_option").equals("sol")){
+						ra_solar.setState(true);
+					}else{
+						ra_lunar.setState(true);
+					}
+					tf_phonenum.setText(rs.getString("phone"));
+					if(rs.getString("group1").equals("1")){
+						ck_school.setSelected(true);
+					}if(rs.getString("group2").equals("1")){
+						ck_academy.setSelected(true);
+					}if(rs.getString("group3").equals("1")){
+						ck_town.setSelected(true);
+					}if(rs.getString("group4").equals("1")){
+						ck_etc.setSelected(true);
+					}
+					ta_info.setText("검색 완료");
+				}
+			}catch(SQLException se){
+				System.err.println("검색 명령어 전송 실패"+se.toString());
+			}
+		}else if(e.getSource().equals(bt_save)){
+			try{
+				int num=stmt.executeUpdate("insert into t1 values('"+name+"','"+
+											m+"','"+d+"','"+c+"','"+p+"',"+g1+","+g2+","+g3+","+g4+")");
+				ta_info.setText(num+"개 저장완료");
+			}catch(SQLException se){
+				System.err.println("명령어 전송 실패");
+			}
+		}else if(e.getSource().equals(bt_del)){
+			try{
+				int num=stmt.executeUpdate("delete from t1 where name='"+name+"'");
+				ta_info.setText(num+"개 삭제완료");
+			}catch(SQLException se){
+				System.err.println("명령어 전송 실패");
+			}
+		}else if(e.getSource().equals(bt_change)){
+			try{
+				int num=stmt.executeUpdate("update t1 set month='"+
+						m+"',day='"+d+"',birth_option='"+c+"',phone='"+p+"',group1="+g1+",group2="+g2+",group3="+g3+",group4="+g4+" where name='"+name+"'");
+				ta_info.setText(num+"개 수정완료");
+			}catch(SQLException se){
+				System.err.println("명령어 전송 실패");
+			}
+		}else if(e.getSource().equals(bt_clean)){
+			tf_name.setText("");
+			ch_month.select(0);
+			ch_day.select(0);
+			ra_solar.setState(true);
+			tf_phonenum.setText("");
+			ck_school.setSelected(false);
+			ck_academy.setSelected(false);
+			ck_town.setSelected(false);
+			ck_etc.setSelected(false);
+			ta_info.setText("");
+		}
+	}
+
 }
